@@ -15,20 +15,13 @@ const server = new ApolloServer({
   context: authMiddleware,
 });
 
-server.start().then(() => {
+server.start().then(res => {
   server.applyMiddleware({ app });
 
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
 
-  // Middleware to serve static files with correct MIME types
-  app.use((req, res, next) => {
-    if (req.url.endsWith('.js')) {
-      res.type('application/javascript');
-    }
-    next();
-  });
-
+  // Serve static assets from the client/build directory
   if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../client/build')));
   }
