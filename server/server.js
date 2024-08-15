@@ -4,7 +4,7 @@ const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
 const { typeDefs, resolvers } = require('./schemas');
 const { authMiddleware } = require('./utils/auth');
-const mongoose = require('mongoose');  // Import mongoose to handle MongoDB connections
+const mongoose = require('mongoose');
 
 // Load environment variables from .env file
 require('dotenv').config();
@@ -29,6 +29,11 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
 }
 
+// Import and use the routes
+const routes = require('./routes');  // Correctly import the routes
+
+app.use(routes);  
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -46,8 +51,6 @@ const startApolloServer = async () => {
       },
     })
   );
-
-  app.use(routes);
 
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`🌍 Now listening on http://localhost:${PORT}`);
