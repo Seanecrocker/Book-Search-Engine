@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
-const { typeDefs, resolvers } = require('./schemas'); // Updated import
+const { typeDefs, resolvers } = require('./schemas');
 const { authMiddleware } = require('./utils/auth');
 const db = require('./config/connection');
 const routes = require('./routes');
@@ -38,7 +38,9 @@ const startApolloServer = async () => {
   app.use(routes);
 
   db.once('open', () => {
-    app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`🌍 Now listening on http://localhost:${PORT}`);
+    });
   });
 };
 
